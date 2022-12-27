@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+      "Search":"../../components/search/Search",
+      "mp-sticky": "@miniprogram-component-plus/sticky"
+  },
+  "navigationBarTitleText": "主页"
+}
