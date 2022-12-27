@@ -7,7 +7,9 @@ Page({
    * 页面的初始数据
    */
   data: {
-    info:null
+    info:null,
+    current:0,
+    commentList:[]
   },
 
   /**
@@ -19,6 +21,7 @@ Page({
       title: options.name,
     })
     this.getDetailInfo(options.id)
+    this.getCommentInfo()
   },
   getDetailInfo(id){
     request({
@@ -27,6 +30,17 @@ Page({
       console.log(res)
       this.setData({
         info:res
+      })
+    })
+  },
+
+  getCommentInfo(){
+    request({
+      url:"/comments"
+    }).then(res=>{
+      console.log(res)
+      this.setData({
+        commentList:res
       })
     })
   },
@@ -83,6 +97,12 @@ Page({
     wx.previewImage({
       current: evt.currentTarget.dataset.current, // 当前显示图片的http链接
       urls: this.data.info.slides.map(item=>`http://localhost:5000${item}`) // 需要预览的图片http链接列表
+    })
+  },
+
+  handleActive(evt){
+    this.setData({
+      current:evt.currentTarget.dataset.index
     })
   }
 })

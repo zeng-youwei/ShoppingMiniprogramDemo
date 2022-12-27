@@ -4,3 +4,35 @@
     <image src="http://localhost:5000{{item}}" mode="aspectFit" bindtap="handleTap" data-current="http://localhost:5000{{item}}"/>
   </swiper-item>
 </swiper>
+
+<mp-sticky offset-top="0">
+  <view class="detailtabbar">
+    <view class="{{current===0?'active':''}}" bindtap="handleActive" data-index="{{0}}">商品详情</view>
+    <view class="{{current===1?'active':''}}" bindtap="handleActive" data-index="{{1}}">用户评价</view>
+  </view>
+</mp-sticky>
+
+<view wx:if="{{current===0}}">
+  <view style="color:gray;">{{info.feature}}</view>
+  <image wx:for="{{info.desc}}" src="{{item}}" wx:key="index" mode="widthFix" style="width:100%"/>
+</view>
+
+<view wx:else>
+  <view wx:for="{{commentList}}" wx:key="index" style="border-bottom:5rpx solid gray;">
+      <view class="user">
+          <image src="http://localhost:5000{{item.userImageUrl}}" class="left" mode="widthFix"/>
+          <view class="left">{{item.nickname}}</view>
+          <view class="right">{{item.creationTime}}</view>
+      </view>
+      <view class="content">{{item.content}}</view>
+      <view class="content">
+        <image src="http://localhost:5000{{item.imgUrl}}" mode="widthFix"/>
+      </view>
+  </view>
+</view>
+
+
+<view class="bottom">
+  <view style="background:#ffd591;">跳转购物车</view>
+  <view style="background:#F76260;">加入购物车</view>
+</view>
