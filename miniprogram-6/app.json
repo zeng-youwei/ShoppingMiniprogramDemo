@@ -4,7 +4,9 @@
       "pages/category/category",
       "pages/shopcar/shopcar",
       "pages/center/center",
-      "pages/detail/detail"
+      "pages/detail/detail",
+      "pages/search/search",
+    "pages/searchlist/searchlist"
 
     ],
     "window":{
@@ -40,6 +42,9 @@
       }]
     },
     "style": "v2",
-    "sitemapLocation": "sitemap.json"
+    "sitemapLocation": "sitemap.json",
+    "useExtendedLib": {
+        "weui": true
+      }
   }
   

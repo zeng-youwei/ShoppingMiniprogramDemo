@@ -11,9 +11,12 @@ Page({
     },
     current: 1,
     total: 0,
-    handleEvent() {
-        console.log('aaa');
-    },
+    handleEvent(){
+        console.log("搜索处理")
+        wx.navigateTo({
+          url: '/pages/search/search',
+        })
+      },
     handleChangePage(e) {
         const id = e.currentTarget.dataset.id
         const name = e.currentTarget.dataset.name
