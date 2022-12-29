@@ -1,13 +1,12 @@
-import CheckAuth from "../../util/auth"
-
-// pages/center/center.js
+// pages/telform/telform.js
+import request from '../../util/request'
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    userInfo:null
+    tel:""
   },
 
   /**
@@ -28,12 +27,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    CheckAuth(()=>{
-      // console.log("显示我的")
-      this.setData({
-        userInfo:wx.getStorageSync('token')
-      })
-    })
+
   },
 
   /**
@@ -70,30 +64,38 @@ Page({
   onShareAppMessage: function () {
 
   },
-  handleTap(){
-    //打开摄像头/相册
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['original', 'compressed'],
-      sourceType: ['album', 'camera'],
-      success : (res) => {
-        // tempFilePath可以作为img标签的src属性显示图片
-        const tempFilePaths = res.tempFilePaths
-        // console.log(tempFilePaths)
+  formInputChange(evt){
+    // console.log(evt.detail.value)
+    this.setData({
+      tel:evt.detail.value
+    })
+  },
 
-        this.setData({
-          userInfo:{
-            ...this.data.userInfo,
-            avatarUrl:tempFilePaths[0]
+  submitForm(){
+    wx.setStorageSync('tel', this.data.tel)
+
+    request({
+      url:`/users?tel=${this.data.tel}&nickName=${wx.getStorageSync('token').nickName}`
+    }).then(res=>{
+      console.log(res)
+      if(res.length===0){
+        request({
+          url:"/users",
+          method:"post",
+          data:{
+            ...wx.getStorageSync('token'),
+            tel:this.data.tel
           }
+        }).then(res=>{
+          wx.navigateBack({
+            delta: 2,
+          })
         })
-
-        wx.setStorageSync('token', {
-          ...wx.getStorageSync('token'),
-          avatarUrl:tempFilePaths[0]
+      }else{
+        wx.navigateBack({
+          delta: 2,
         })
       }
     })
-    
   }
 })

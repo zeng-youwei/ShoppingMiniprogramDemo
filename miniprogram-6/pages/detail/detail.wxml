@@ -33,6 +33,6 @@
 
 
 <view class="bottom">
-  <view style="background:#ffd591;">跳转购物车</view>
-  <view style="background:#F76260;">加入购物车</view>
+  <view style="background:#ffd591;" bindtap="handleChange">跳转购物车</view>
+  <view style="background:#F76260;" bindtap="handleAdd">加入购物车</view>
 </view>

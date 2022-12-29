@@ -1,13 +1,11 @@
-import CheckAuth from "../../util/auth"
-
-// pages/center/center.js
+// pages/auth/auth.js
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    userInfo:null
+
   },
 
   /**
@@ -28,12 +26,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    CheckAuth(()=>{
-      // console.log("显示我的")
-      this.setData({
-        userInfo:wx.getStorageSync('token')
-      })
-    })
+
   },
 
   /**
@@ -70,30 +63,17 @@ Page({
   onShareAppMessage: function () {
 
   },
-  handleTap(){
-    //打开摄像头/相册
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['original', 'compressed'],
-      sourceType: ['album', 'camera'],
-      success : (res) => {
-        // tempFilePath可以作为img标签的src属性显示图片
-        const tempFilePaths = res.tempFilePaths
-        // console.log(tempFilePaths)
-
-        this.setData({
-          userInfo:{
-            ...this.data.userInfo,
-            avatarUrl:tempFilePaths[0]
-          }
-        })
-
-        wx.setStorageSync('token', {
-          ...wx.getStorageSync('token'),
-          avatarUrl:tempFilePaths[0]
+  handleAuth(){
+    wx.getUserProfile({
+      desc: '用于完善会员资料',
+      success: (res) => {
+        console.log(res.userInfo)
+        wx.setStorageSync('token', res.userInfo)
+        wx.navigateTo({
+          url: '/pages/telform/telform',
         })
       }
+
     })
-    
   }
 })

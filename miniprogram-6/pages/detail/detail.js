@@ -1,4 +1,9 @@
-const { default: request } = require("../../util/request")
+const {
+  default: CheckAuth
+} = require("../../util/auth")
+const {
+  default: request
+} = require("../../util/request")
 
 // pages/detail/detail.js
 Page({
@@ -7,9 +12,9 @@ Page({
    * 页面的初始数据
    */
   data: {
-    info:null,
-    current:0,
-    commentList:[]
+    info: null,
+    current: 0,
+    commentList: []
   },
 
   /**
@@ -23,24 +28,24 @@ Page({
     this.getDetailInfo(options.id)
     this.getCommentInfo()
   },
-  getDetailInfo(id){
+  getDetailInfo(id) {
     request({
-      url:`/goods/${id}`
-    }).then(res=>{
+      url: `/goods/${id}`
+    }).then(res => {
       console.log(res)
       this.setData({
-        info:res
+        info: res
       })
     })
   },
 
-  getCommentInfo(){
+  getCommentInfo() {
     request({
-      url:"/comments"
-    }).then(res=>{
+      url: "/comments"
+    }).then(res => {
       console.log(res)
       this.setData({
-        commentList:res
+        commentList: res
       })
     })
   },
@@ -92,17 +97,78 @@ Page({
   onShareAppMessage: function () {
 
   },
-  handleTap(evt){
+  handleTap(evt) {
     // console.log("111")
     wx.previewImage({
       current: evt.currentTarget.dataset.current, // 当前显示图片的http链接
-      urls: this.data.info.slides.map(item=>`http://localhost:5000${item}`) // 需要预览的图片http链接列表
+      urls: this.data.info.slides.map(item => `http://localhost:5000${item}`) // 需要预览的图片http链接列表
     })
   },
 
-  handleActive(evt){
+  handleActive(evt) {
     this.setData({
-      current:evt.currentTarget.dataset.index
+      current: evt.currentTarget.dataset.index
+    })
+  },
+  handleAdd() {
+    // console.log("add")
+
+    /*
+      1. 判断本地存储是否有手机号信息，如果有直接加入
+      2. 没有手机号，判断是否有token信息，如果有，引导调整手机号绑定
+      3 没有token授权信息， 我们引导用户授权页面
+    */
+    CheckAuth(() => {
+      console.log("准备加入购物车")
+      let {
+        nickName
+      } = wx.getStorageSync('token')
+      let tel = wx.getStorageSync('tel')
+      var goodId = this.data.info.id
+      // console.log(nickName,tel,goodId)
+
+      request({
+        url: "/carts",
+        data: {
+          tel,
+          goodId,
+          nickName
+        }
+      }).then(res => {
+        console.log(res)
+
+        if (res.length === 0) {
+          return request({
+            url: "/carts",
+            method: "post",
+            data: {
+              "username": nickName,
+              "tel": tel,
+              "goodId": goodId,
+              "number": 1,
+              "checked": false
+            }
+          })
+        }else{
+          return request({
+            url: `/carts/${res[0].id}`,
+            method: "put",
+            data: {
+              ...res[0],
+              number:res[0].number+1
+            }
+          })
+        }
+      }).then(res=>{
+        wx.showToast({
+          title: '加入购物车成功',
+        })
+      })
+    })
+  },
+  handleChange(){
+    wx.switchTab({
+      url: '/pages/shopcar/shopcar',
     })
   }
 })

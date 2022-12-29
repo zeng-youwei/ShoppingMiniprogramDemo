@@ -6,11 +6,12 @@
       "pages/center/center",
       "pages/detail/detail",
       "pages/search/search",
-    "pages/searchlist/searchlist"
-
+      "pages/searchlist/searchlist",
+      "pages/auth/auth",
+      "pages/telform/telform"
     ],
     "window":{
-      "backgroundTextStyle":"light",
+      "backgroundTextStyle":"dark",
       "navigationBarBackgroundColor": "#14c145",
       "navigationBarTitleText": "购物",
       "navigationBarTextStyle":"white"
@@ -44,7 +45,8 @@
     "style": "v2",
     "sitemapLocation": "sitemap.json",
     "useExtendedLib": {
-        "weui": true
-      }
+      "weui": true
+    }
+  
   }
   

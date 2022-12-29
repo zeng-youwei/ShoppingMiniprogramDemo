@@ -1,18 +1,19 @@
 /* pages/home/home.wxss */
-swiper image{
-    width:100%;
-  }
-  
-  swiper{
-    height: 297rpx;
-  }
 
-  .goodbox {
-    padding:20rpx;
-    overflow: hidden;
-  }
-  
-  .goodbox image{
-    width: 200rpx;
-    float:left;
-  }
+swiper image{
+  width:100%;
+}
+
+swiper{
+  height: 297rpx;
+}
+
+.goodbox {
+  padding:20rpx;
+  overflow: hidden;
+}
+
+.goodbox image{
+  width: 200rpx;
+  float:left;
+}

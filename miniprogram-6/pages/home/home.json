@@ -1,7 +1,8 @@
 {
   "usingComponents": {
-      "Search":"../../components/search/Search",
-      "mp-sticky": "@miniprogram-component-plus/sticky"
+    "kerwin-search":"../../components/search/Search",
+    "mp-sticky": "@miniprogram-component-plus/sticky"
   },
-  "navigationBarTitleText": "主页"
+  "navigationBarTitleText": "主页",
+  "enablePullDownRefresh": true
 }

@@ -1,3 +1,5 @@
+import CheckAuth from "../../util/auth"
+import request from '../../util/request'
 // pages/shopcar/shopcar.js
 Page({
 
@@ -5,7 +7,11 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    slideButtons: [{
+      type: 'warn',
+      text: '删除'
+    }],
+    cartList: []
   },
 
   /**
@@ -26,7 +32,21 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    CheckAuth(() => {
+      // console.log("显示购物车")
+      let {
+        nickName
+      } = wx.getStorageSync('token')
+      let tel = wx.getStorageSync('tel')
+      request({
+        url: `/carts?_expand=good&username=${nickName}&tel=${tel}`
+      }).then(res => {
+        console.log(res)
+        this.setData({
+          cartList: res
+        })
+      })
+    })
   },
 
   /**
@@ -62,5 +82,82 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  slideButtonTap(evt) {
+    // console.log("delete",evt.currentTarget.dataset.id)
+    var id = evt.currentTarget.dataset.id
+    this.setData({
+      cartList:this.data.cartList.filter(item=>item.id!==id)
+    })
+    request({
+      url:`/carts/${id}`,
+      method:"delete"
+    })
+  },
+  handleTap(evt) {
+    // console.log("tap",)
+    var item = evt.currentTarget.dataset.item
+    item.checked = !item.checked
+    this.handleUpdate(item)
+  },
+
+  // -处理函数
+  handleMinus(evt){
+    var item = evt.currentTarget.dataset.item
+    if(item.number===1){
+      return 
+    }
+    item.number--
+    this.handleUpdate(item)
+  },
+  // +处理函数
+  handleAdd(evt){
+    var item = evt.currentTarget.dataset.item
+    item.number++
+    this.handleUpdate(item)
+  },
+  handleUpdate(item) {
+    this.setData({
+      cartList: this.data.cartList.map(data => {
+        if (data.id === item.id) {
+          return item
+        }
+        return data
+      })
+    })
+
+    request({
+      url: `/carts/${item.id}`,
+      method: "put",
+      data: {
+        "username": item.username,
+        "tel": item.tel,
+        "goodId": item.goodId,
+        "number": item.number,
+        "checked": item.checked,
+      }
+    })
+  },
+  handleAllChecked(evt){
+    // console.log()
+    if(evt.detail.value.length===0){
+      //未全选
+      this.setData({
+        cartList:this.data.cartList.map(item=>({
+            ...item,
+            checked:false
+        }))
+      })
+      //
+    }else{
+      //全选
+      this.setData({
+        cartList:this.data.cartList.map(item=>({
+            ...item,
+            checked:true
+        }))
+      })
+    }
   }
 })
